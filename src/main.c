@@ -3,9 +3,6 @@
 #include <util/delay.h>
 #include "pixels.h"
 
-#define NUM_RGB       (240)       // TODO
-#define NUM_BYTES     (NUM_RGB*3) // TODO
-
 int main(void) {
 
     DDRB |= (1 << PB0);

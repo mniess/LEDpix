@@ -44,20 +44,20 @@ void render(uint8_t *rgb_arr) {
 
     cli(); // TODO save interrupt enable state and restore
 
-    uint8_t *p1  = &rgb_arr[1];
-    uint8_t *p2  = &rgb_arr[241];
-    uint8_t *p3  = &rgb_arr[481];
-    uint8_t d1 = rgb_arr[0];
-    uint8_t d2 = rgb_arr[240];
-    uint8_t d3 = rgb_arr[480];
+    uint8_t *p1  = &rgb_arr[START_1];
+    uint8_t *p2  = &rgb_arr[START_2+1];
+    uint8_t *p3  = &rgb_arr[START_3+1];
+    uint8_t d1 = *p1++;
+    uint8_t d2 = rgb_arr[START_2];
+    uint8_t d3 = rgb_arr[START_3];
 
-    const uint8_t mask = _BV(PB0) | _BV(PB1) | _BV(PB2);
-    const uint8_t low = PORTB & (~mask);
-    const uint8_t high = PORTB | mask;
+    const uint8_t mask = _BV(OUT_PIN_1) | _BV(OUT_PIN_2) | _BV(OUT_PIN_3);
+    const uint8_t low = OUT_PORT & (~mask);
+    const uint8_t high = OUT_PORT | mask;
 
     uint8_t nbits = 7;
     uint8_t tmp = low;
-    uint16_t nbytes = 240;
+    uint16_t nbytes = NUM_BYTES;
 
     asm volatile(             
         "start:  nop\n\t"
@@ -107,7 +107,7 @@ void render(uint8_t *rgb_arr) {
         "        nop\n\t"
         "        out %[ioport], %[portdown]\n\t"
         ::
-        [ioport]    "I" (_SFR_IO_ADDR(PORTB)),
+        [ioport]    "I" (_SFR_IO_ADDR(OUT_PORT)),
         [portup]    "r" (high),
         [portdown]  "r" (low),
         [bitcount]  "d" (nbits),
@@ -117,9 +117,9 @@ void render(uint8_t *rgb_arr) {
         [data1]     "r" (d1),
         [data2]     "r" (d2),
         [data3]     "r" (d3),
-        [bit1]      "I" (1 << PB0),
-        [bit2]      "I" (1 << PB1),
-        [bit3]      "I" (1 << PB2),
+        [bit1]      "I" (1 << OUT_PIN_1),
+        [bit2]      "I" (1 << OUT_PIN_2),
+        [bit3]      "I" (1 << OUT_PIN_3),
         [tmp]       "d" (tmp),
         [bytecount] "w" (nbytes)
     );

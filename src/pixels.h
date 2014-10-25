@@ -2,6 +2,7 @@
 #define _PIXELS_H_
 
 #include <avr/io.h>
+#include "conf.h"
 
 void render(uint8_t *rgb_arr);
 
