@@ -1,18 +1,12 @@
 #include <avr/io.h>
-#include <stdlib.h>
 #include <util/delay.h>
 #include "pixels.h"
 
+uint8_t rgb_arr[NUM_BYTES] = {0};
+
 int main(void) {
 
-    DDRB |= (1 << PB0);
-    DDRB |= (1 << PB1);
-    DDRB |= (1 << PB2);
-    PORTB &= ~(1 << PB0);
-    PORTB &= ~(1 << PB1);
-    PORTB &= ~(1 << PB2);
-
-    uint8_t rgb_arr[NUM_BYTES] = {0};
+    init_pixels();
 
     uint8_t *p = &rgb_arr[NUM_BYTES-3];
     while (1) {

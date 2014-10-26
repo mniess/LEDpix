@@ -39,17 +39,27 @@ void rearrange(uint8_t *rgb_arr) {
 }
 
 
+void init_pixels(void) {
+    OUT_DR |= (1 << OUT_PIN_1);
+    OUT_DR |= (1 << OUT_PIN_2);
+    OUT_DR |= (1 << OUT_PIN_3);
+    OUT_PORT &= ~(1 << OUT_PIN_1);
+    OUT_PORT &= ~(1 << OUT_PIN_2);
+    OUT_PORT &= ~(1 << OUT_PIN_3);
+}
+
+
 void render(uint8_t *rgb_arr) {
     rearrange(rgb_arr);
 
     cli(); // TODO save interrupt enable state and restore
 
-    uint8_t *p1  = &rgb_arr[START_1];
-    uint8_t *p2  = &rgb_arr[START_2+1];
-    uint8_t *p3  = &rgb_arr[START_3+1];
+    uint8_t *p1 = &rgb_arr[START_1];
+    uint8_t *p2 = &rgb_arr[START_2];
+    uint8_t *p3 = &rgb_arr[START_3];
     uint8_t d1 = *p1++;
-    uint8_t d2 = rgb_arr[START_2];
-    uint8_t d3 = rgb_arr[START_3];
+    uint8_t d2 = *p2++;
+    uint8_t d3 = *p3++;
 
     const uint8_t mask = _BV(OUT_PIN_1) | _BV(OUT_PIN_2) | _BV(OUT_PIN_3);
     const uint8_t low = OUT_PORT & (~mask);
@@ -57,9 +67,9 @@ void render(uint8_t *rgb_arr) {
 
     uint8_t nbits = 7;
     uint8_t tmp = low;
-    uint16_t nbytes = NUM_BYTES;
+    uint16_t nbytes = NUM_BYTES/3;
 
-    asm volatile(             
+asm volatile(    
         "start:  nop\n\t"
         "        nop\n\t"
         "        nop\n\t"
@@ -108,15 +118,15 @@ void render(uint8_t *rgb_arr) {
         "        out %[ioport], %[portdown]\n\t"
         ::
         [ioport]    "I" (_SFR_IO_ADDR(OUT_PORT)),
-        [portup]    "r" (high),
-        [portdown]  "r" (low),
+        [portup]    "l" (high),
+        [portdown]  "l" (low),
         [bitcount]  "d" (nbits),
         [ptr1]      "e" (p1),
         [ptr2]      "e" (p2),
         [ptr3]      "e" (p3),
-        [data1]     "r" (d1),
-        [data2]     "r" (d2),
-        [data3]     "r" (d3),
+        [data1]     "d" (d1),
+        [data2]     "d" (d2),
+        [data3]     "d" (d3),
         [bit1]      "I" (1 << OUT_PIN_1),
         [bit2]      "I" (1 << OUT_PIN_2),
         [bit3]      "I" (1 << OUT_PIN_3),

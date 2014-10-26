@@ -4,6 +4,8 @@
 #include <avr/io.h>
 #include "conf.h"
 
+void init_pixels(void);
+
 void render(uint8_t *rgb_arr);
 
 #endif
