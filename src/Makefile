@@ -4,7 +4,7 @@ MCU=atmega328p
 DF_CPU=16000000
 CCONF=-funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums
 CFLAGS=-c -mmcu=$(MCU) -DF_CPU=$(DF_CPU) -Os $(CCONF) -Wall -Wstrict-prototypes
-LDFLAGS=
+LDFLAGS=-mmcu=$(MCU) -Wall
 
 PROGRAMMER=avrisp
 PORT=-P/dev/ttyACM0
@@ -22,13 +22,13 @@ all: hex
 hex: $(TARGET).hex
 
 $(TARGET).hex: $(TARGET).elf
-	avr-objcopy -O ihex -j .data -j .text $(TARGET).elf $(TARGET).hex
+	avr-objcopy -O ihex -R .eeprom $(TARGET).elf $(TARGET).hex
 
 $(TARGET).elf: $(OBJECTS)
 	avr-gcc $(LDFLAGS) $(OBJECTS) -o $(TARGET).elf
 
 .c.o:
-	avr-gcc $(CFLAGS) -mmcu=$(MCU) $< -o $@
+	avr-gcc $(CFLAGS) $< -o $@
 
 size:
 	avr-size --mcu=$(MCU) -C $(TARGET).elf
