@@ -56,8 +56,8 @@ void init_pixels(void) {
 
 void render(uint8_t *rgb_arr) {
     rearrange(rgb_arr);
-
-    cli(); // TODO save interrupt enable state and restore
+    
+    uint8_t tmp_sreg = SREG;
 
     uint8_t *p1 = &rgb_arr[START_1];
     uint8_t *p2 = &rgb_arr[START_2];
@@ -74,7 +74,7 @@ void render(uint8_t *rgb_arr) {
     uint8_t tmp = low;
     uint16_t nbytes = NUM_BYTES/3;
 
-asm volatile(    
+    asm volatile(    
         "start:  nop\n\t"
         "        nop\n\t"
         "        nop\n\t"
@@ -138,7 +138,8 @@ asm volatile(
         [tmp]       "d" (tmp),
         [bytecount] "w" (nbytes)
     );
-    sei(); // TODO
+    
+    SREG = tmp_sreg;
     
     rearrange(rgb_arr);
 }
