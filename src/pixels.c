@@ -1,6 +1,11 @@
 #include <avr/interrupt.h>
 #include "pixels.h"
 
+#define START_1   (0)
+#define START_2   (NUM_BYTES/3)
+#define START_3   (NUM_BYTES/3*2)
+
+
 void rearrange(uint8_t *rgb_arr) {
     uint8_t *ps = &rgb_arr[60];
     uint8_t *pe = &rgb_arr[120];

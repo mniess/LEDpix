@@ -9,11 +9,6 @@
 #define OUT_PIN_2 (PB1)
 #define OUT_PIN_3 (PB2)
 
-
 #define NUM_BYTES (NUM_RGB*3)
-
-#define START_1   (0)
-#define START_2   (NUM_BYTES/3)
-#define START_3   (NUM_BYTES/3*2)
 
 #endif
