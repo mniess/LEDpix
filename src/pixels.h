@@ -23,7 +23,7 @@
 #define _PIXELS_H_
 
 #include <avr/io.h>
-#include "conf.h"
+#include "const.h"
 
 void init_pixels(void);
 

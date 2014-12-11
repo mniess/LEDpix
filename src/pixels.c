@@ -50,9 +50,9 @@ void rearrange(uint8_t *rgb_arr) {
         "        dec r18\n\t"
         "        brne rearr\n\t"
         "        subi r28,-90\n\t"  //TODO
-	    "        sbci r29,-1\n\t"
+        "        sbci r29,-1\n\t"
         "        subi r30,-150\n\t" //TODO
-	    "        sbci r31,-1\n\t"
+        "        sbci r31,-1\n\t"
         "        ldi r18, 10\n\t"
         "        dec r19\n\t"
         "        brne rearr\n\t"
